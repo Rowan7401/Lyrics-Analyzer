@@ -33,6 +33,7 @@ def bar_searcher(artist_songs):
 
     query = input("What word would you like to search if the artists uses in their bars? ")
     bar = ""
+    mod_query = "[" + query + "]"
     for song in song_links:
         if song.startswith("https"):
             link = str(song)
@@ -51,15 +52,11 @@ def bar_searcher(artist_songs):
                     bar_zone = line_spots[4]
                     for x in range(0, bar_zone):
                         bar += master_lyrics[x] + " "
-                    print(bar)
-                    print()
                 elif query_spot >= line_spots[-3]:
                     start_line = line_spots[-5]
                     bar_zone = master_lyrics.__len__()
                     for x in range(start_line, bar_zone):
                         bar += master_lyrics[x] + " "
-                    print(bar)
-                    print()
                 else:
                     for x in range(line_spots.__len__()):
                         if line_spots[x] < query_spot <= line_spots[x+1]:
@@ -67,8 +64,10 @@ def bar_searcher(artist_songs):
                             bar_zone = line_spots[x+3]
                     for x in range(start_line, bar_zone):
                         bar += master_lyrics[x] + " "
-                    print(bar)
-                    print()
+            if query in bar:
+                bar = bar.replace(query, "[" + query + "]")
+                print(bar)
+                print()
             line_spots.clear()
         if song.startswith("/"):
             link = "https://www.azlyrics.com" + str(song)
@@ -87,15 +86,11 @@ def bar_searcher(artist_songs):
                     bar_zone = line_spots[4]
                     for x in range(0, bar_zone):
                         bar += master_lyrics[x] + " "
-                    print(bar)
-                    print()
                 elif query_spot >= line_spots[-3]:
                     start_line = line_spots[-5]
                     bar_zone = master_lyrics.__len__()
                     for x in range(start_line, bar_zone):
                         bar += master_lyrics[x] + " "
-                    print(bar)
-                    print()
                 else:
                     for x in range(line_spots.__len__()):
                         if line_spots[x] < query_spot <= line_spots[x + 1]:
@@ -103,10 +98,13 @@ def bar_searcher(artist_songs):
                             bar_zone = line_spots[x + 3]
                     for x in range(start_line, bar_zone):
                         bar += master_lyrics[x] + " "
-                    print(bar)
-                    print()
+
+            if query in bar and mod_query not in bar:
+                bar = bar.replace(query, mod_query)
+                print(bar)
+                print()
             line_spots.clear()
-    if bar == "":
+    if len(bar) == 0:
         print("This word was never used in the artist's lyrics")
 
 
@@ -145,7 +143,7 @@ def lyric_sorter(song):
         lyrics.pop(lyrics.__len__() - 1)
     lyrics[0] = lyrics[0].replace("\n", "")
 
-    time.sleep(11)
+    time.sleep(3)
     return lyrics
 
 
@@ -203,7 +201,7 @@ def lyric_sorter_wordcount(song):
     for key, value in lyrics_counter.items():
         word_freq.append((value, key))
     word_freq.sort(reverse=True)
-    time.sleep(11)
+    time.sleep(3)
     return lyrics, word_freq, lyrics_counter
 
 
@@ -252,7 +250,10 @@ if decision == "y":
 else:
     answer = input("Would you like to search for bars? (y/n) ")
     if answer == "y":
-        url = "https://www.azlyrics.com/" + first_letter + "/" + artist_name + ".html"
+        if artist_name == "24kgoldn":
+            url = "https://www.azlyrics.com/19/" + artist_name + ".html"
+        else:
+            url = "https://www.azlyrics.com/" + first_letter + "/" + artist_name + ".html"
         bar_searcher(url)
     else:
         print("alrighty then we will do nothing")
